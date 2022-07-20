@@ -14,33 +14,35 @@ IS
  
 BEGIN
     IF (length(Snilss) = 14) THEN
-    --check simvol
-        IF(SUBSTR(Snilss,4,1) != '-') THEN RETURN 0;  END IF;
-        IF(SUBSTR(Snilss,8,1) != '-') THEN RETURN 0;  END IF;
-        IF(SUBSTR(Snilss,12,1) != ' ') THEN RETURN 0; END IF;
+        --check simvol
+            IF(SUBSTR(Snilss,4,1) != '-') THEN RETURN 0;  END IF;
+            IF(SUBSTR(Snilss,8,1) != '-') THEN RETURN 0;  END IF;
+            IF(SUBSTR(Snilss,12,1) != ' ') THEN RETURN 0; END IF;
+
+            Snils_r := SUBSTR(Snilss,1,3)|| SUBSTR(Snilss,5,3)|| SUBSTR(Snilss,9,3) ;   
+
+        WHILE (i < 10)
+        LOOP
+            Numb := TO_NUMBER(SUBSTR(Snils_r,i,1)); 
+            Summ := Summ + Numb * (10-i);
+            ILS_Num := ILS_Num * 10 + Numb;
+            IF(LastDigit = Numb) THEN
+                LastDigitCount := LastDigitCount + 1;
+                IF(LastDigitCount > 2) THEN RETURN 0;  END IF;
+            ELSE
+                LastDigit := Numb;
+                LastDigitCount := 1;
+            END IF;
+            i := i +1;
+        END LOOP;
+    
+        IF(ILS_Num <= 1001998) THEN RETURN 0; END IF;
         
-        Snils_r := SUBSTR(Snilss,1,3)|| SUBSTR(Snilss,5,3)|| SUBSTR(Snilss,9,3) ;   
-    
-    WHILE (i < 10)
-    LOOP
-        Numb := TO_NUMBER(SUBSTR(Snils_r,i,1)); 
-        Summ := Summ + Numb * (10-i);
-        ILS_Num := ILS_Num * 10 + Numb;
-        IF(LastDigit = Numb) THEN
-            LastDigitCount := LastDigitCount + 1;
-            IF(LastDigitCount > 2) THEN RETURN 0;  END IF;
-        ELSE
-            LastDigit := Numb;
-            LastDigitCount := 1;
-        END IF;
-        i := i +1;
-    END LOOP;
-    
-    IF(ILS_Num <= 1001998) THEN RETURN 0; END IF;
         Ostatok := TO_CHAR(MOD(Summ,101));
         IF (Length(Ostatok)) = 1 THEN Ostatok := '0' || Ostatok;END IF;
         IF (Length(Ostatok)) = 3 THEN Ostatok := SUBSTR(Ostatok,2,2);END IF;
         IF(Ostatok = SUBSTR(Snilss,13, 2)) THEN Res := true; END IF;
+        
     END IF;
     
     IF Res THEN 
